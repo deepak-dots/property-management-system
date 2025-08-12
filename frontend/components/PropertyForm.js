@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';  // <-- Import react-hook-form
+import { useForm } from 'react-hook-form'; 
 import axios from '../utils/axiosInstance';
 import { useRouter } from 'next/router';
 import ActionDropdown from './ActionDropdown';
@@ -9,7 +9,7 @@ const baseURL = 'http://localhost:5000/uploads/';
 const PropertyForm = ({ initialData = {}, isEdit = false, onSuccess }) => {
   const router = useRouter();
   const [existingImages, setExistingImages] = useState([]);
-  const [removedImages, setRemovedImages] = useState([]);  // Track removed images
+  const [removedImages, setRemovedImages] = useState([]);  
 
   // react-hook-form setup
   const {
@@ -39,10 +39,9 @@ const PropertyForm = ({ initialData = {}, isEdit = false, onSuccess }) => {
     },
   });
 
-  // Sync initial data with react-hook-form and state on edit
+
   useEffect(() => {
     if (isEdit && initialData && initialData._id) {
-      // Set form values via react-hook-form's setValue
       setValue('title', initialData.title || '');
       setValue('bhkType', initialData.bhkType || '');
       setValue('furnishing', initialData.furnishing || '');
@@ -111,19 +110,14 @@ const PropertyForm = ({ initialData = {}, isEdit = false, onSuccess }) => {
       formData.append('activeStatus', data.isActive ? 'Active' : 'Draft');
 
       // Append new images files
-      newImages.forEach((file) => {
-        formData.append('images', file);
-      });
+      newImages.forEach(file => formData.append('images', file));
+
 
       // Append existing images URLs
-      existingImages.forEach((url) => {
-        formData.append('existingImages', url);
-      });
+      formData.append('existingImages', JSON.stringify(existingImages));
 
       // Append removed images URLs
-      removedImages.forEach((url) => {
-        formData.append('removedImages', url);
-      });
+      formData.append('removedImages', JSON.stringify(removedImages)); 
 
       if (isEdit && initialData._id) {
         await axios.put(`/properties/${initialData._id}`, formData);
@@ -146,7 +140,7 @@ const PropertyForm = ({ initialData = {}, isEdit = false, onSuccess }) => {
 
   return (
     <div className="max-w-2xl mx-auto bg-white shadow p-6 rounded-lg space-y-4">
-      {isEdit && initialData._id && <ActionDropdown propertyId={initialData._id} />}
+       {isEdit && initialData._id && <ActionDropdown propertyId={initialData._id} hideEdit={true} />}
 
       <h2 className="text-2xl font-bold mb-4">{isEdit ? 'Edit Property' : 'Add Property'}</h2>
 

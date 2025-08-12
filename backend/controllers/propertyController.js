@@ -1,3 +1,6 @@
+// controllers/propertyController.js
+const fs = require('fs');
+const path = require('path');
 const Property = require('../models/Property');
 
 // Get all properties with search and filters
@@ -93,13 +96,42 @@ exports.createProperty = async (req, res) => {
   }
 };
 
+
+
 exports.updateProperty = async (req, res) => {
   try {
     const {
-      title, bhkType, furnishing, bedrooms, bathrooms, superBuiltupArea, developer, project,
-      transactionType, status, price, reraId, address, description, city, activeStatus
+      title, bhkType, furnishing, bedrooms, bathrooms, superBuiltupArea,
+      developer, project, transactionType, status, price, reraId, address,
+      description, city, activeStatus, existingImages, removedImages
     } = req.body;
 
+    // Parse JSON if sent as strings
+    const existingImgs = existingImages
+      ? (typeof existingImages === 'string' ? JSON.parse(existingImages) : existingImages)
+      : [];
+    const removedImgs = removedImages
+      ? (typeof removedImages === 'string' ? JSON.parse(removedImages) : removedImages)
+      : [];
+
+    const property = await Property.findById(req.params.id);
+    if (!property) return res.status(404).json({ message: 'Property not found' });
+
+    // Delete removed images from disk
+    removedImgs.forEach(img => {
+      const filePath = path.join(__dirname, '..', 'uploads', img);
+      if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+    });
+
+    // Filter out removed images from current images
+    let updatedImages = property.images.filter(img => !removedImgs.includes(img));
+
+    // Append newly uploaded files
+    if (req.files && req.files.length > 0) {
+      updatedImages = updatedImages.concat(req.files.map(f => f.filename));
+    }
+
+    // Build update object
     const updatedData = {
       title,
       bhkType,
@@ -117,22 +149,20 @@ exports.updateProperty = async (req, res) => {
       description,
       city,
       activeStatus,
+      images: updatedImages,
     };
 
+    // Remove undefined fields
     Object.keys(updatedData).forEach(key => updatedData[key] === undefined && delete updatedData[key]);
 
-    if (req.files && req.files.length > 0) {
-      updatedData.images = req.files.map(file => file.filename);
-    }
-
     const updatedProperty = await Property.findByIdAndUpdate(req.params.id, updatedData, { new: true });
-    if (!updatedProperty) return res.status(404).json({ message: 'Property not found' });
 
     res.status(200).json(updatedProperty);
   } catch (err) {
     res.status(500).json({ message: 'Update failed', error: err.message });
   }
 };
+
 
 exports.duplicateProperty = async (req, res) => {
   try {

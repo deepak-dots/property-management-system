@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const fs = require('fs'); // create upload directory
+const fs = require('fs'); 
 const propertyController = require('../controllers/propertyController');
 
 // Define and create uploads directory
@@ -29,7 +29,7 @@ router.get('/', propertyController.getProperties);
 router.get('/:id', propertyController.getPropertyById);
 router.post('/', upload.array('images', 10), propertyController.createProperty);
 router.put('/:id', upload.array('images', 10), propertyController.updateProperty);
-router.post('/:id/duplicate', propertyController.duplicateProperty); // ✅ Corrected here
+router.post('/:id/duplicate', propertyController.duplicateProperty);
 router.delete('/:id', propertyController.deleteProperty);
 router.get('/:id/related', propertyController.getRelatedProperties);
 
