@@ -1,0 +1,9 @@
+{
+  "/_app": "pages/_app.js",
+  "/_error": "pages/_error.js",
+  "/_document": "pages/_document.js",
+  "/properties": "pages/properties.js",
+  "/admin/edit-property/[id]": "pages/admin/edit-property/[id].js",
+  "/admin/dashboard": "pages/admin/dashboard.js",
+  "/": "pages/index.js"
+}
