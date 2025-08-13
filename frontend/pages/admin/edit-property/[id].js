@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from '../../../utils/axiosInstance';
 import PropertyForm from '../../../components/PropertyForm';
+import Sidebar from '../../../components/AdminSidebar';
 
 function ConfirmationModal({ isOpen, message, onConfirm, onCancel }) {
   if (!isOpen) return null;
@@ -34,8 +35,6 @@ export default function EditPropertyPage() {
 
   const [initialData, setInitialData] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  // Confirmation modal state
   const [confirmOpen, setConfirmOpen] = useState(false);
 
   const openConfirm = () => setConfirmOpen(true);
@@ -99,8 +98,12 @@ export default function EditPropertyPage() {
   }
 
   return (
-    <>
-      <div className="min-h-screen bg-gray-100 p-8">
+    <div className="flex min-h-screen">
+      {/* Sidebar */}
+      <Sidebar />
+
+      {/* Main Content */}
+      <div className="flex-1 bg-gray-100 p-8">
         <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
           <button
             onClick={() => router.push('/admin/dashboard')}
@@ -129,12 +132,13 @@ export default function EditPropertyPage() {
         </div>
       </div>
 
+      {/* Delete Confirmation Modal */}
       <ConfirmationModal
         isOpen={confirmOpen}
         message="Are you sure you want to delete this property?"
         onConfirm={handleDeleteConfirmed}
         onCancel={closeConfirm}
       />
-    </>
+    </div>
   );
 }

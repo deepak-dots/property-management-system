@@ -3,6 +3,9 @@ import axios from '../../utils/axiosInstance';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import SearchBar from '../../components/SearchBar';
+import AdminSidebar from '../../components/AdminSidebar';
+
+
 
 function ConfirmationModal({
   isOpen,
@@ -220,195 +223,201 @@ export default function AdminDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
-      <div className="max-w-7xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <div className="flex items-center justify-between mb-6">
-          <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
+    <div className="flex min-h-screen bg-gray-100">
 
-          <button
-            onClick={handleLogout}
-            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-          >
-            Logout
-          </button>
-        </div>
+        <AdminSidebar onLogout={handleLogout} />
 
-        <div className="flex items-center justify-between mb-6">
-          <Link href="/admin/add-property">
-            <button className="mb-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
-              Add New Property
-            </button>
-          </Link>
+        <main className="flex-1 p-8">
 
-          <Link href="/properties" target="_blank">
-            <button className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
-              View All Properties
-            </button>
-          </Link>
-        </div>
+          <div className="max-w-7xl mx-auto bg-white shadow-md rounded-lg p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
 
-        <div className="mb-6">
-          <SearchBar
-            initialSearch={searchQuery}
-            onSearch={handleSearch}
-            onSearchChange={handleSearchChange}
-          />
-        </div>
+              <button
+                onClick={handleLogout}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              >
+                Logout
+              </button>
+            </div>
 
-        {properties.length === 0 ? (
-          <p className="text-gray-500">No properties found.</p>
-        ) : (
-          <>
-            <div className="overflow-x-auto">
-              <table className="min-w-full bg-white border border-gray-200 text-sm">
-                <thead>
-                  <tr className="bg-gray-100">
-                    <th className="px-4 py-2 border">S.N.</th>
-                    <th className="px-4 py-2 border">Property Name</th>
-                    <th className="px-4 py-2 border">Furnishing (BHK Type)</th>
-                    <th className="px-4 py-2 border">Price</th>
-                    <th className="px-4 py-2 border">City</th>
-                    <th className="px-4 py-2 border">Status</th>
-                    <th className="px-4 py-2 border">Image</th>
-                    <th className="px-4 py-2 border">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {properties.map((p, index) => (
-                    <tr key={p._id} className="hover:bg-gray-50">
-                      <td className="px-4 py-2 border">
-                        {(currentPage - 1) * itemsPerPage + index + 1}
-                      </td>
-                      <td className="px-4 py-2 border">
-                        <Link
-                          href={`/admin/edit-property/${p._id}`}
-                          className="block px-4 py-2 hover:bg-gray-100"
-                        >
-                          {p.title}
-                        </Link>
-                      </td>
-                      <td className="px-4 py-2 border">
-                        {p.furnishing || '-'} ({p.bhkType || '-'})
-                      </td>
-                      <td className="px-4 py-2 border">
-                        {p.price ? `₹${p.price}` : '-'}
-                      </td>
-                      <td className="px-4 py-2 border">{p.city || '-'}</td>
-                      <td className="px-4 py-2 border">{p.status || '-'}</td>
-                      <td className="px-4 py-2 border">
-                        {p.images && p.images.length > 0 ? (
-                          <img
-                            src={`http://localhost:5000/uploads/${p.images[0]}`}
-                            alt={p.title}
-                            className="h-16 w-24 object-cover rounded"
-                          />
-                        ) : (
-                          <span className="text-gray-400">No Image</span>
-                        )}
-                      </td>
-                      <td className="px-4 py-2 border">
-                        <div className="relative inline-block text-left">
-                          <details className="group">
-                            <summary className="bg-gray-200 text-gray-800 px-3 py-1 rounded cursor-pointer hover:bg-gray-300">
-                              Actions
-                            </summary>
-                            <div className="absolute z-10 mt-2 w-40 bg-white border border-gray-200 rounded shadow-md">
-                              <ul className="py-1 text-sm text-gray-700">
-                                <li>
-                                  <Link
-                                    href={`/admin/edit-property/${p._id}`}
-                                    className="block px-4 py-2 hover:bg-gray-100"
-                                  >
-                                    Edit
-                                  </Link>
-                                </li>
-                                <li>
-                                  <button
-                                    onClick={() => openModal('delete', p._id)}
-                                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                  >
-                                    Delete
-                                  </button>
-                                </li>
-                                <li>
-                                  <button
-                                    onClick={() => openModal('duplicate', p._id)}
-                                    className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                                  >
-                                    Duplicate
-                                  </button>
-                                </li>
-                                <li>
-                                  <Link
-                                    href={`/properties/${p._id}`}
-                                    className="block px-4 py-2 hover:bg-gray-100"
-                                    target="_blank"
-                                  >
-                                    View
-                                  </Link>
-                                </li>
-                              </ul>
+            <div className="flex items-center justify-between mb-6">
+              <Link href="/admin/add-property">
+                <button className="mb-6 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+                  Add New Property
+                </button>
+              </Link>
+
+              <Link href="/properties" target="_blank">
+                <button className="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800">
+                  View All Properties
+                </button>
+              </Link>
+            </div>
+
+            <div className="mb-6">
+              <SearchBar
+                initialSearch={searchQuery}
+                onSearch={handleSearch}
+                onSearchChange={handleSearchChange}
+              />
+            </div>
+
+            {properties.length === 0 ? (
+              <p className="text-gray-500">No properties found.</p>
+            ) : (
+              <>
+                <div className="overflow-x-auto">
+                  <table className="min-w-full bg-white border border-gray-200 text-sm">
+                    <thead>
+                      <tr className="bg-gray-100">
+                        <th className="px-4 py-2 border">S.N.</th>
+                        <th className="px-4 py-2 border">Property Name</th>
+                        <th className="px-4 py-2 border">Furnishing (BHK Type)</th>
+                        <th className="px-4 py-2 border">Price</th>
+                        <th className="px-4 py-2 border">City</th>
+                        <th className="px-4 py-2 border">Status</th>
+                        <th className="px-4 py-2 border">Image</th>
+                        <th className="px-4 py-2 border">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {properties.map((p, index) => (
+                        <tr key={p._id} className="hover:bg-gray-50">
+                          <td className="px-4 py-2 border">
+                            {(currentPage - 1) * itemsPerPage + index + 1}
+                          </td>
+                          <td className="px-4 py-2 border">
+                            <Link
+                              href={`/admin/edit-property/${p._id}`}
+                              className="block px-4 py-2 hover:bg-gray-100"
+                            >
+                              {p.title}
+                            </Link>
+                          </td>
+                          <td className="px-4 py-2 border">
+                            {p.furnishing || '-'} ({p.bhkType || '-'})
+                          </td>
+                          <td className="px-4 py-2 border">
+                            {p.price ? `₹${p.price}` : '-'}
+                          </td>
+                          <td className="px-4 py-2 border">{p.city || '-'}</td>
+                          <td className="px-4 py-2 border">{p.status || '-'}</td>
+                          <td className="px-4 py-2 border">
+                            {p.images && p.images.length > 0 ? (
+                              <img
+                                src={`http://localhost:5000/uploads/${p.images[0]}`}
+                                alt={p.title}
+                                className="h-16 w-24 object-cover rounded"
+                              />
+                            ) : (
+                              <span className="text-gray-400">No Image</span>
+                            )}
+                          </td>
+                          <td className="px-4 py-2 border">
+                            <div className="relative inline-block text-left">
+                              <details className="group">
+                                <summary className="bg-gray-200 text-gray-800 px-3 py-1 rounded cursor-pointer hover:bg-gray-300">
+                                  Actions
+                                </summary>
+                                <div className="absolute z-10 mt-2 w-40 bg-white border border-gray-200 rounded shadow-md">
+                                  <ul className="py-1 text-sm text-gray-700">
+                                    <li>
+                                      <Link
+                                        href={`/admin/edit-property/${p._id}`}
+                                        className="block px-4 py-2 hover:bg-gray-100"
+                                      >
+                                        Edit
+                                      </Link>
+                                    </li>
+                                    <li>
+                                      <button
+                                        onClick={() => openModal('delete', p._id)}
+                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                      >
+                                        Delete
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <button
+                                        onClick={() => openModal('duplicate', p._id)}
+                                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                                      >
+                                        Duplicate
+                                      </button>
+                                    </li>
+                                    <li>
+                                      <Link
+                                        href={`/properties/${p._id}`}
+                                        className="block px-4 py-2 hover:bg-gray-100"
+                                        target="_blank"
+                                      >
+                                        View
+                                      </Link>
+                                    </li>
+                                  </ul>
+                                </div>
+                              </details>
                             </div>
-                          </details>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
 
-            {/* Pagination controls */}
-            <div className="flex justify-center space-x-2 mt-4">
-              <button
-                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
-                className="px-3 py-1 rounded border disabled:opacity-50"
-              >
-                Previous
-              </button>
+                {/* Pagination controls */}
+                <div className="flex justify-center space-x-2 mt-4">
+                  <button
+                    onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1 rounded border disabled:opacity-50"
+                  >
+                    Previous
+                  </button>
 
-              <span className="px-3 py-1">
-                Page {currentPage} of {totalPages}
-              </span>
+                  <span className="px-3 py-1">
+                    Page {currentPage} of {totalPages}
+                  </span>
 
-              <button
-                onClick={() =>
-                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={currentPage === totalPages}
-                className="px-3 py-1 rounded border disabled:opacity-50"
-              >
-                Next
-              </button>
-            </div>
-          </>
-        )}
+                  <button
+                    onClick={() =>
+                      setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                    }
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1 rounded border disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
+              </>
+            )}
 
-        {/* Confirmation modal */}
-        <ConfirmationModal
-          isOpen={modalOpen}
-          title={modalAction === 'delete' ? 'Delete Property' : 'Duplicate Property'}
-          message={
-            modalAction === 'delete'
-              ? 'Are you sure you want to delete this property? This action cannot be undone.'
-              : 'Do you want to duplicate this property?'
-          }
-          onConfirm={confirmModalAction}
-          onCancel={closeModal}
-          confirmText="Yes"
-          cancelText="Cancel"
-        />
+            {/* Confirmation modal */}
+            <ConfirmationModal
+              isOpen={modalOpen}
+              title={modalAction === 'delete' ? 'Delete Property' : 'Duplicate Property'}
+              message={
+                modalAction === 'delete'
+                  ? 'Are you sure you want to delete this property? This action cannot be undone.'
+                  : 'Do you want to duplicate this property?'
+              }
+              onConfirm={confirmModalAction}
+              onCancel={closeModal}
+              confirmText="Yes"
+              cancelText="Cancel"
+            />
 
-        {/* Notification modal */}
-        <ConfirmationModal
-          isOpen={notificationOpen}
-          isNotification={true}
-          title={notificationTitle}
-          message={notificationMessage}
-          onCloseNotification={closeNotification}
-        />
-      </div>
+            {/* Notification modal */}
+            <ConfirmationModal
+              isOpen={notificationOpen}
+              isNotification={true}
+              title={notificationTitle}
+              message={notificationMessage}
+              onCloseNotification={closeNotification}
+            />
+          </div>
+        </main>
     </div>
   );
 }

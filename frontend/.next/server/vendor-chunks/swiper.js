@@ -30,6 +30,16 @@ exports.modules = {
 
 /***/ }),
 
+/***/ "(pages-dir-node)/./node_modules/swiper/modules/thumbs.css":
+/*!************************************************!*\
+  !*** ./node_modules/swiper/modules/thumbs.css ***!
+  \************************************************/
+/***/ (() => {
+
+
+
+/***/ }),
+
 /***/ "(pages-dir-node)/./node_modules/swiper/swiper.css":
 /*!****************************************!*\
   !*** ./node_modules/swiper/swiper.css ***!

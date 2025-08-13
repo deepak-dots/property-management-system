@@ -8,6 +8,7 @@ const path = require('path');
 const cors = require('cors');      
 const propertyRoutes = require('./routes/property');
 const authRoutes = require('./routes/auth');
+const userRouter = require('./routes/user');
 const quotesRouter = require('./routes/propertyQuotesForm');
 
 
@@ -32,6 +33,8 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 
 app.use('/api/auth', authRoutes);
+app.use('/api/user', userRouter);
+
 app.use('/api/properties', propertyRoutes);
 
 app.use("/api/quotes", quotesRouter);
@@ -41,3 +44,5 @@ app.get('/', (req, res) => {
 });
 
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+//app.listen(PORT, '0.0.0.0', () => console.log(`Server started on port ${PORT}`));
+

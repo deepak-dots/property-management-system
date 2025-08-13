@@ -42,7 +42,7 @@ export default function LoginForm() {
         className="bg-white p-6 rounded-lg shadow-lg w-full max-w-sm space-y-4"
         noValidate
       >
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Login</h2>
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Admin Login</h2>
 
         {/* Email Field */}
         <div className="mb-4">
